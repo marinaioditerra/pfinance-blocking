@@ -1,0 +1,1 @@
+INSERT INTO DEPOSIT (id, version, name, currency) VALUES (0, 0, 'Kraken', 'BITCOIN');
