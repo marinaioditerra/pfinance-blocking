@@ -11,7 +11,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
 @MappedSuperclass
-public abstract class AbstractBaseEntity {
+abstract class AbstractBaseEntity {
 
     @Getter @Setter
     @Column(name = "id")
