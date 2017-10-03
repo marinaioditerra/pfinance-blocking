@@ -1,7 +1,6 @@
 package it.christianb.pfinanceblocking.datarest;
 
 import it.christianb.pfinanceblocking.model.Deposit;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -32,9 +31,11 @@ public class DepositDataRestTest {
                 .exchange("/api/deposits", HttpMethod.GET, new HttpEntity<Void>(headers),
                     new ParameterizedTypeReference<Resources<Deposit>>() {}).getBody();
 
-        assertThat(result.getContent().size(), Matchers.equalTo(1));
+        assertThat(result.getContent().size(), equalTo(2));
         Deposit theDeposit = result.iterator().next();
-        assertEquals("Kraken", theDeposit.getName());
+        assertThat(theDeposit.getName(), equalTo("Kraken"));
+        assertThat(theDeposit.getId(), equalTo(12345L));
+        assertThat(theDeposit.getMovements().size(), equalTo(2));
     }
 
 }

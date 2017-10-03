@@ -9,18 +9,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
+import java.io.Serializable;
 
 @MappedSuperclass
-abstract class AbstractBaseEntity {
+abstract class AbstractBaseEntity implements Serializable {
 
     @Getter @Setter
     @Column(name = "id")
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    protected Long id;
 
     @Getter @Setter
     @Column(name = "version")
     @Version
-    private Long version;
+    protected Long version;
 
 }

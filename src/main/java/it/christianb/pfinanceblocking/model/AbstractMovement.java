@@ -1,5 +1,7 @@
 package it.christianb.pfinanceblocking.model;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,26 +25,32 @@ import java.util.Date;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
 @Table(name = "MOVEMENT")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = InMovement.class, name = "IN"),
+        @JsonSubTypes.Type(value = OutMovement.class, name = "OUT"),
+        @JsonSubTypes.Type(value = TransferMovement.class, name = "TRANSFER")
+})
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 abstract class AbstractMovement extends AbstractBaseEntity {
 
     @Getter @Setter
     @ManyToOne(optional = false)
     @JoinTable(name = "DEPOSIT_MOVEMENTS", joinColumns = @JoinColumn(name = "fk_movement", nullable = false),
         inverseJoinColumns = @JoinColumn(name = "fk_deposit", nullable = false))
-    private Deposit deposit;
+    protected Deposit deposit;
 
     @Getter @Setter
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, insertable = false, updatable = false)
-    private MovementType type;
+    protected MovementType type;
 
     @Getter @Setter
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "movement_date", nullable = false)
-    private Date date;
+    protected Date date;
 
     @Getter @Setter
     @Column(name = "amount", nullable = false)
-    private BigDecimal amount;
+    protected BigDecimal amount;
 
 }
