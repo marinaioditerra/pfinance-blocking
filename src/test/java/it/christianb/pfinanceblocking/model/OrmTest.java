@@ -7,6 +7,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
@@ -21,6 +22,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@DirtiesContext
 @Transactional
 @RunWith(SpringRunner.class)
 public class OrmTest {
@@ -31,7 +33,7 @@ public class OrmTest {
     @Rule public ExpectedException exception = ExpectedException.none();
 
     @Test public void testDepositInsertionOk() throws Exception {
-        assertThat(depositRepo.findAll().size(), equalTo(2)); // the ones from the data.sql
+        assertThat(depositRepo.findAll().size(), equalTo(3)); // the ones from the data.sql
 
         Deposit aDeposit = new Deposit("Unicredit", Currency.EURO);
         Deposit savedDeposit = depositRepo.save(aDeposit);
@@ -40,7 +42,7 @@ public class OrmTest {
         assertEquals("Unicredit", savedDeposit.getName());
         assertEquals(Currency.EURO, savedDeposit.getCurrency());
         assertThat(savedDeposit.getMovements().size(), equalTo(0));
-        assertThat(depositRepo.findAll().size(), equalTo(3));
+        assertThat(depositRepo.findAll().size(), equalTo(4));
     }
 
     @Test public void testDepositUniqueName() throws Exception {
@@ -53,21 +55,18 @@ public class OrmTest {
         Deposit krakenDeposit = depositRepo.findOne(12345L); // from the data.sql
         Deposit coinBaseDeposit = depositRepo.findOne(99999L); // from the data.sql
 
-        assertThat(krakenDeposit.getMovements().size(), equalTo(2));
-        AbstractMovement movement = krakenDeposit.getMovements().get(0);
+        assertThat(krakenDeposit.getMovements().size(), equalTo(3));
+        Movement movement = krakenDeposit.getMovements().get(0);
         assertThat(movement.getType(), equalTo(MovementType.IN));
-        assertTrue(movement instanceof InMovement);
         assertThat(movement.getAmount(), equalTo(new BigDecimal("10.00")));
         assertNotNull(movement.getDate());
         movement = krakenDeposit.getMovements().get(1);
         assertThat(movement.getType(), equalTo(MovementType.OUT));
-        assertTrue(movement instanceof OutMovement);
         assertThat(movement.getAmount(), equalTo(new BigDecimal("1.00")));
 
         assertThat(coinBaseDeposit.getMovements().size(), equalTo(1));
         movement = coinBaseDeposit.getMovements().get(0);
         assertThat(movement.getType(), equalTo(MovementType.TRANSFER));
-        assertTrue(movement instanceof TransferMovement);
         assertThat(movement.getAmount(), equalTo(new BigDecimal("2.00")));
     }
 

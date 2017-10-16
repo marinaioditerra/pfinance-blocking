@@ -2,8 +2,8 @@ package it.christianb.pfinanceblocking.repos;
 
 import it.christianb.pfinanceblocking.model.Deposit;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-@Repository
+@RepositoryRestResource
 public interface DepositRepo extends JpaRepository<Deposit, Long> {
 }
