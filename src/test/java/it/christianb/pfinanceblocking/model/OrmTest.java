@@ -1,6 +1,7 @@
 package it.christianb.pfinanceblocking.model;
 
 import it.christianb.pfinanceblocking.repos.DepositRepo;
+import it.christianb.pfinanceblocking.repos.UserRepo;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -11,15 +12,13 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
-
 import java.math.BigDecimal;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @DirtiesContext
@@ -30,24 +29,32 @@ public class OrmTest {
     @Autowired
     private DepositRepo depositRepo;
 
+    @Autowired
+    private UserRepo userRepo;
+
     @Rule public ExpectedException exception = ExpectedException.none();
 
     @Test public void testDepositInsertionOk() throws Exception {
-        assertThat(depositRepo.findAll().size(), equalTo(3)); // the ones from the data.sql
+        assertThat(depositRepo.findAll().size(), equalTo(3)); // the ones from the data.sql script
+        User user = userRepo.findOne(2L); // the one from the data.sql script
+        assertThat(user, notNullValue());
 
-        Deposit aDeposit = new Deposit("Unicredit", Currency.EURO);
+        Deposit aDeposit = new Deposit("Unicredit", Currency.EURO, user);
         Deposit savedDeposit = depositRepo.save(aDeposit);
 
-        assertNotNull(savedDeposit.getId());
-        assertEquals("Unicredit", savedDeposit.getName());
-        assertEquals(Currency.EURO, savedDeposit.getCurrency());
+        assertThat(savedDeposit.getId(), notNullValue());
+        assertThat(savedDeposit.getOwner().getUsername(), equalTo("nick"));
+        assertThat(savedDeposit.getName(), equalTo("Unicredit"));
+        assertThat(savedDeposit.getCurrency(), equalTo(Currency.EURO));
         assertThat(savedDeposit.getMovements().size(), equalTo(0));
         assertThat(depositRepo.findAll().size(), equalTo(4));
     }
 
     @Test public void testDepositUniqueName() throws Exception {
+        User user = userRepo.findOne(2L); // the one from the data.sql script
+        assertThat(user, notNullValue());
         exception.expectMessage(containsString("depositNameConstraint".toUpperCase()));
-        Deposit aDeposit = new Deposit("Kraken", Currency.EURO);
+        Deposit aDeposit = new Deposit("Kraken", Currency.EURO, user);
         depositRepo.save(aDeposit);
     }
 

@@ -1,0 +1,1 @@
+INSERT INTO USERS (id, version, username, password) VALUES (0, 0, 'user', '41edf6e61ed42a3c6848b0ae91ddc5662377c09a3ed38fcd9f9e82664294bcfd');

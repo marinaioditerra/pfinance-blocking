@@ -23,7 +23,7 @@ public class Movement extends AbstractBaseEntity {
 
     @Getter @Setter
     @ManyToOne(optional = false)
-    @JoinColumn(name = "fk_deposit")
+    @JoinColumn(name = "fk_deposit", nullable = false)
     private Deposit deposit;
 
     @Getter @Setter

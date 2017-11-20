@@ -12,6 +12,11 @@ import java.util.List;
 public class Deposit extends AbstractBaseEntity {
 
     @Getter @Setter
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "fk_user", nullable = false)
+    private User owner;
+
+    @Getter @Setter
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -28,9 +33,10 @@ public class Deposit extends AbstractBaseEntity {
     public Deposit() {
     }
 
-    public Deposit(String name, Currency currency) {
+    public Deposit(String name, Currency currency, User owner) {
         this.name = name;
         this.currency = currency;
+        this.owner = owner;
     }
 
 }
