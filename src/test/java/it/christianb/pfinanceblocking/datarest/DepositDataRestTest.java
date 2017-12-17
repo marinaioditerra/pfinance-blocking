@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -81,7 +82,15 @@ public class DepositDataRestTest {
         mvc.perform(post("/api/movements").content(input))
                 .andExpect(status().isCreated());
 
-        assertThat(jdbcTemplate.queryForObject("SELECT COUNT(*) FROM MOVEMENTS WHERE fk_deposit=55555", Integer.class), equalTo(1));
+        assertThat(jdbcTemplate.queryForObject("SELECT COUNT(*) FROM MOVEMENTS WHERE fk_deposit=55555", Integer.class), equalTo(2));
+    }
+
+    @Test public void testGetTagsForUser() throws Exception {
+        mvc.perform(get("/api/tags/search/findByUserUsername?username=john"))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$._embedded.tags.length()", equalTo(1)))
+                .andExpect(jsonPath("$._embedded.tags[0].name", equalTo("Salary")));
     }
 
 }

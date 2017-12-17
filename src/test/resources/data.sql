@@ -8,4 +8,9 @@ INSERT INTO DEPOSITS (id, version, name, currency, fk_user) VALUES (99999, 0, 'C
 INSERT INTO MOVEMENTS (id, version, type, movement_date, amount, fk_deposit) VALUES (100, 0, 'IN', CURRENT_TIMESTAMP, 10, 12345);
 INSERT INTO MOVEMENTS (id, version, type, movement_date, amount, fk_deposit) VALUES (101, 0, 'OUT', CURRENT_TIMESTAMP, 1, 12345);
 INSERT INTO MOVEMENTS (id, version, type, movement_date, amount, fk_deposit) VALUES (102, 0, 'IN', CURRENT_TIMESTAMP, 2, 12345);
+INSERT INTO MOVEMENTS (id, version, type, movement_date, amount, fk_deposit) VALUES (103, 0, 'IN', CURRENT_TIMESTAMP, 1000, 55555);
 INSERT INTO MOVEMENTS (id, version, type, movement_date, amount, fk_deposit, fk_to_deposit) VALUES (200, 0, 'TRANSFER', CURRENT_TIMESTAMP, 2, 99999, 12345);
+
+INSERT INTO TAGS(id, version, name, fk_user) VALUES (1, 0, 'Salary', 1);
+
+INSERT INTO MOVEMENTS_TAGS(fk_tag, fk_movement) VALUES (1, 103);
