@@ -54,7 +54,8 @@ public class DepositDataRestTest {
                 jdbcTemplate.queryForObject("SELECT password FROM USERS WHERE username='testuser'", String.class)), is(true));
     }
 
-    @Test public void testGetFullDepositListOk() throws Exception {
+    @Test
+    public void testGetFullDepositListOk() throws Exception {
         mvc.perform(get("/api/deposits"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("length($._embedded.deposits)", greaterThanOrEqualTo(2)))
@@ -88,9 +89,14 @@ public class DepositDataRestTest {
     @Test public void testGetTagsForUser() throws Exception {
         mvc.perform(get("/api/tags/search/findByUserUsername?username=john"))
                 .andExpect(status().isOk())
-                .andDo(print())
-                .andExpect(jsonPath("$._embedded.tags.length()", equalTo(1)))
+                .andExpect(jsonPath("$._embedded.tags.length()", equalTo(2)))
                 .andExpect(jsonPath("$._embedded.tags[0].name", equalTo("Salary")));
+    }
+
+    @Test public void testGetMovementTags() throws Exception {
+        mvc.perform(get("/api/movements/103"))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
 }

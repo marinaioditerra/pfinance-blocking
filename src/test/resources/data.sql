@@ -12,5 +12,6 @@ INSERT INTO MOVEMENTS (id, version, type, movement_date, amount, fk_deposit) VAL
 INSERT INTO MOVEMENTS (id, version, type, movement_date, amount, fk_deposit, fk_to_deposit) VALUES (200, 0, 'TRANSFER', CURRENT_TIMESTAMP, 2, 99999, 12345);
 
 INSERT INTO TAGS(id, version, name, fk_user) VALUES (1, 0, 'Salary', 1);
+INSERT INTO TAGS(id, version, name, fk_user) VALUES (2, 0, 'Food', 1);
 
 INSERT INTO MOVEMENTS_TAGS(fk_tag, fk_movement) VALUES (1, 103);
